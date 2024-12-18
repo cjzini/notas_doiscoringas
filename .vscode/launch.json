@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python:Streamlit",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "venv\\Lib\\site-packages\\streamlit",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "run",
+                "main.py",
+                "--server.port",
+                "2000"
+            ]
+        }
+    ]
+}
