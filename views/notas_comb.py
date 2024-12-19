@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 from helpers.buscanf import Buscanf
 from helpers.trataarquivos import Trataarquivos
 from helpers.trataxml import Trataxml
@@ -28,7 +29,10 @@ if btn_processar:
         trataarquivos.deletar_arquivos()
         buscanf = Buscanf(pasta, data_ini, data_fim)
         buscanf.pegarNotas()
-        trataarquivos.extrair_arquivos()
+        if not trataarquivos.extrair_arquivos():
+            st.error("Não foram encontradas notas no período informado.")
+            time.sleep(2)
+            st.rerun()
         trataxml.extrair_xmls()
         trataxml.grava_supabase()
         #st.write(trataxml.dados_nota)
@@ -40,8 +44,6 @@ if btn_processar:
             file_name=nome_arquivo, 
             mime='text/csv'
         )
-
-
 
 # with col1:
 #     #st.subheader("Filtros:")
@@ -86,5 +88,3 @@ if btn_processar:
 #             trataarquivos.extrair_arquivos()
 #             st.success("Pronto!")
 #             #st.write(data_nf)
-
-

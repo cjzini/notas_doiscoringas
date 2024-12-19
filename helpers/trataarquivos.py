@@ -18,6 +18,8 @@ class Trataarquivos:
 
     def extrair_arquivos(self):
         arquivo = os.listdir(self.pasta)
+        if not arquivo:
+            return False
         # print (arquivo[0])
         caminho = os.path.join(self.pasta, arquivo[0])
         with zipfile.ZipFile(caminho, 'r') as zip:
@@ -25,6 +27,7 @@ class Trataarquivos:
             zip.extractall(self.pasta)
             # deletar o arquivo .zip original
         os.remove(caminho)
+        return True
 
 
     def deletar_arquivos(self):

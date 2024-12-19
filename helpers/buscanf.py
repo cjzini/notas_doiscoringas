@@ -8,6 +8,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 import time
+import streamlit as st
 
 class Buscanf:
     def __init__(self, pasta, data_ini, data_fim):
@@ -27,12 +28,11 @@ class Buscanf:
         options.add_experimental_option('excludeSwitches', ['enable-logging']) # Ocultar mensagens de output
         service = Service(ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=options)
-        self.login_page = "https://auth.sieg.com/login"
-        self.cofre = "https://cofre.sieg.com/pesquisa-avancada"
-        self.usuario = "comercial@doiscoringas.com.br"
-        self.senha = "Scania963"
+        self.login_page = st.secrets["NOTAS_LOGIN"]
+        self.cofre = st.secrets["NOTAS_COFRE"]
+        self.usuario = st.secrets["NOTAS_USUARIO"]
+        self.senha = st.secrets["NOTAS_SENHA"]
         self.wait = WebDriverWait(self.driver, 30)
-
 
     def pegarNotas(self):
         self.driver.get(self.login_page)

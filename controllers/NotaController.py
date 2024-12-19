@@ -29,7 +29,7 @@ def InserirAbastecimentos(lista_abastecimentos):
     if supabase:
         for abastecimento in lista_abastecimentos:
             # O 'documento', 'data' e 'placa_veiculo' são os campos que serão usados para identificar o abastecimento - no caso na ordem 0, 1 e 2
-            result = supabase.table("abastecimentos").select("id").eq("documento", abastecimento[0]).eq("data", abastecimento[1]).eq("placa_veiculo", abastecimento[2]).execute().data
+            result = supabase.table("abastecimentos").select("id").eq("documento", abastecimento[0]).eq("data", abastecimento[1]).eq("placa_veiculo", abastecimento[2]).eq("quantidade", abastecimento[6]).execute().data
             if not result or len(result) == 0:  # Se o registro não existir, insere
                 supabase.table("abastecimentos").insert({
                     "documento": abastecimento[0],
