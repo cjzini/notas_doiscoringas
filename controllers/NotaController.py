@@ -1,5 +1,4 @@
 import services.supabase_client as supabase_client
-import streamlit as st
 
 def VerificarCpf(placa):
     conn = supabase_client.get_db_connection()
