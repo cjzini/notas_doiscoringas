@@ -18,6 +18,7 @@ class Buscanf:
         self.data_fim = data_fim
         # Inicia no modo invisivel
         options.add_argument("--headless")
+        options.add_argument('--disable-gpu')
         #options.add_argument("--start-maximized")
         options.add_experimental_option('prefs',  {
             "download.default_directory": self.download_dir,
@@ -25,9 +26,10 @@ class Buscanf:
             "download.directory_upgrade": True
             }
         )
-        options.add_experimental_option('excludeSwitches', ['enable-logging']) # Ocultar mensagens de output
-        service = Service(ChromeDriverManager().install())
-        self.driver = webdriver.Chrome(service=service, options=options)
+        #options.add_experimental_option('excludeSwitches', ['enable-logging']) # Ocultar mensagens de output
+        #service = Service(ChromeDriverManager().install())
+        #self.driver = webdriver.Chrome(service=service, options=options)
+        self.driver = webdriver.Chrome(options=options)
         self.login_page = st.secrets["NOTAS_LOGIN"]
         self.cofre = st.secrets["NOTAS_COFRE"]
         self.usuario = st.secrets["NOTAS_USUARIO"]
