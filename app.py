@@ -42,8 +42,7 @@ def logout_user():
 
 # Interface de login
 def login_page():
-    st.title("Login")
-    
+    st.title("Login")  
     with st.form("login_form"):
         email = st.text_input("Email")
         password = st.text_input("Senha", type="password")
@@ -57,8 +56,6 @@ def login_page():
 # Interface principal após o login
 def main_page():
     role = st.session_state.role
-
-
     notas_comb = st.Page(
         "views/notas_comb.py",
         title="Notas de Combustível",
@@ -86,9 +83,6 @@ def main_page():
     # if Page_cliente == 'Incluir':
     #     st.experimental_set_query_params()
     #     PageCreateCliente.Create()
-
-
-
     settings = st.Page("settings.py", title="Configuração", icon=":material/settings:")
     logout_page = st.Page(logout_user, title="Sair", icon=":material/logout:")
 

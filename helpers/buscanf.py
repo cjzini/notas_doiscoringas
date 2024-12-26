@@ -4,9 +4,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
 import time
 import streamlit as st
 
@@ -19,17 +19,16 @@ class Buscanf:
         # Inicia no modo invisivel
         options.add_argument("--headless")
         options.add_argument('--disable-gpu')
-        #options.add_argument("--start-maximized")
-        options.add_experimental_option('prefs',  {
-            "download.default_directory": self.download_dir,
-            "download.prompt_for_download": False,
-            "download.directory_upgrade": True
-            }
-        )
+        # options.add_argument("--start-maximized")
+        options.set_preference("browser.download.folderList", 2)
+        options.set_preference("browser.download.manager.showWhenStarting", False)
+        options.set_preference("browser.download.dir", self.download_dir)
+        options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf,application/zip")
         #options.add_experimental_option('excludeSwitches', ['enable-logging']) # Ocultar mensagens de output
         #service = Service(ChromeDriverManager().install())
         #self.driver = webdriver.Chrome(service=service, options=options)
-        self.driver = webdriver.Chrome(options=options)
+        service = Service(GeckoDriverManager().install())
+        self.driver = webdriver.Firefox(service=service, options=options)
         self.login_page = st.secrets["NOTAS_LOGIN"]
         self.cofre = st.secrets["NOTAS_COFRE"]
         self.usuario = st.secrets["NOTAS_USUARIO"]
@@ -70,18 +69,32 @@ class Buscanf:
         self.wait.until(EC.element_to_be_clickable(btnMarcarTodos)).click()
         # Percorrer a tabela de itens de notas fiscais e clicar na nota se esta estiver cancelada para desmarca-la
         tabela = self.driver.find_element(By.ID, 'table')
-        linhas = tabela.find_elements(By.TAG_NAME, 'tr')
+        body = tabela.find_element(By.TAG_NAME, 'tbody')
+        linhas = body.find_elements(By.TAG_NAME, 'tr')
         # Iterar sobre as linhas
         for linha in linhas:
-            try:
-                # Verifique se existe um <div> com a classe e texto desejados
-                div = linha.find_element(By.CLASS_NAME, "eventFormat.CMT")
-                if div.text == "CMT":
-                    # Clique na linha
-                    linha.click()
-            except Exception as e:
-                # Ignorar linhas que não contêm o elemento
-                pass
+            # Percorrer as colunas da linha
+            colunas = linha.find_elements(By.TAG_NAME, 'td')
+            # Iterar sobre as colunas
+            for coluna in colunas:
+                try:
+                    # Percorrer as celulas da coluna
+                    links = coluna.find_elements(By.TAG_NAME, 'a')
+                    # Iterar sobre as celulas
+                    for link in links:
+                        # Verifique se o link contém o texto desejado
+                        try:
+                            # Verifique se existe um <div> com a classe e texto desejados
+                            #div = link.find_element(By.CLASS_NAME, "eventFormat CMT")
+                            div = link.find_element(By.TAG_NAME, 'div')
+                            if div.text == "CMT":
+                                # Clique na linha
+                                div.click()
+                        except Exception as e:
+                            # Ignorar linhas que não contêm o elemento
+                            pass
+                except Exception as e:
+                    pass
         time.sleep(3)
         btnBaixar = self.driver.find_element(By.XPATH, '//*[@id="ctl00"]/div[4]/div[2]/div[2]/button[1]')
         self.wait.until(EC.element_to_be_clickable(btnBaixar)).click()
