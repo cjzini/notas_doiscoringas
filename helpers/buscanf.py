@@ -33,7 +33,7 @@ class Buscanf:
         self.cofre = st.secrets["NOTAS_COFRE"]
         self.usuario = st.secrets["NOTAS_USUARIO"]
         self.senha = st.secrets["NOTAS_SENHA"]
-        self.wait = WebDriverWait(self.driver, 30)
+        self.wait = WebDriverWait(self.driver, 60)
 
     def pegarNotas(self):
         self.driver.get(self.login_page)
